@@ -1,0 +1,37 @@
+{% include "header.html" %}
+
+<header class="masthead" style="background-image: url('{{ account.account_img }}')">
+<!--    <div class="overlay"></div>-->
+<!--    url(' {{ account.account_img }}')-->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+
+            <h1>{{ account.name }}</h1>
+<!--            <h2> {{ account.branch }}</h2>-->
+            <span class="subheading">({{ account.branch }})</span>
+            <span class="subheading">See Account Information</span>
+          </div>
+        </div>
+      </div>
+<!--    </div>-->
+  </header>
+
+<div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+          <br>
+     <h3> {{ account.description|safe}} </h3>
+     <br>
+
+    <a class="btn btn-primary float-right" href="{{url_for('accounts')}}">Back to  all Accounts</a>
+    <a class="btn btn-primary float-right" href="{{url_for('edit_account', account_id=account.id)}}">Edit Account</a>
+    <a class="btn btn-primary float-right" href="{{url_for('show_fop_list', account_id=account.id)}}">See FoPs</a>
+<!--     <button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/fop'">See FoPs</button>-->
+
+      </div>
+    </div>
+  </div>
+<br>
+{% include "footer.html" %}

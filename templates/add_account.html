@@ -1,0 +1,68 @@
+{% include "header.html" %}
+
+{% if is_edit: %}
+<header class="masthead" style="background-image: url('{{ account.account_img }}')">
+{% else %}
+<header class="masthead" style="background-image: url('{{ url_for('static', filename='img/edit-account.jpg')}}')">
+{% endif %}
+<!--    <div class="overlay"></div>-->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            {% if is_edit: %}
+            <h1>Edit Account</h1>
+            {% else: %}
+            <h1>New Account</h1>
+            {% endif %}
+            <span class="subheading">High Level Description of the overall Account</span>
+          </div>
+        </div>
+      </div>
+<!--    </div>-->
+  </header>
+
+ <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+          {% if is_edit: %}
+            <form action="{{ url_for('edit_account', account_id=account.id) }}" method="POST">
+          {% else: %}
+            <form action="{{ url_for('add_new_account') }}" method="POST">
+          {% endif %}
+
+         {{ form.csrf_token }}
+
+         <p>
+             <h3>{{ form.account_name.label }}</h3> {{ form.account_name(size=30) }}
+         </p>
+
+          <p>
+            <h3>{{ form.img_url.label }}</h3> {{ form.img_url(size=60) }}
+         </p>
+
+         <p>
+            <h3>{{ form.branch.label }}</h3>  {{ form.branch }}
+         </p>
+
+         <p>
+            <h3>{{ form.body.label }}</h3> {{ form.body }}
+         </p>
+
+         {{ form.submit }}
+
+
+         {{ ckeditor.load() }}
+         {{ ckeditor.config(name='body') }}
+
+      </form>
+<br>
+
+<!--
+
+
+      </div>
+    </div>
+  </div>
+
+{% include "footer.html" %}

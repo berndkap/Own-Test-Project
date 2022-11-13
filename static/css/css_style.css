@@ -1,0 +1,170 @@
+h1 {
+    font_size: 3rem;
+    line-height:1.5;
+    font-weight: 900;
+    color: white;
+}
+
+h2 {
+    font_size: 3rem;
+    line-height:0.5;
+    font-weight: 900;
+    color: black;
+}
+
+h3 {
+    font_size: 3rem;
+    line-height:1.5;
+    font-weight: 400;
+    color: black;
+}
+
+.space {
+    padding: 50px 50px;
+}
+
+.title {
+    background-color: white;
+    color: blue;
+}
+
+.container-fluid {
+padding: 0px 12px ;
+}
+
+.text_box {
+    background-color: white;
+    padding: 30px 0px;
+}
+
+.form_box {
+    padding: 20px 0px;
+}
+
+.range_box {
+padding: 20px 400px;
+}
+
+.left_box {
+    background-color: #0D6EFD;
+}
+
+/* Container holding the image and the text */
+.container {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+
+
+/* Top left text */
+.pos5 {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+}
+
+/* Top right text */
+.pos4 {
+  position: absolute;
+  top: 25%;
+  left: 20%;
+}
+
+/* Bottom right text */
+.pos3 {
+  position: absolute;
+  top: 40%;
+  left: 30%;
+}
+
+/* Centered text */
+.pos2 {
+  position: absolute;
+  top: 58%;
+  left: 10%;
+}
+
+.pos1 {
+  position: absolute;
+  top: 80%;
+  left: 30%;
+}
+
+.start-button {
+  margin: 5% 3% 5% 0;
+}
+
+.text-box {
+    padding: 100px 10 px;
+}
+
+.form_width {
+    padding: 0% 20%;
+}
+
+header.masthead .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+
+  opacity: 0.5;
+}
+
+header.masthead .page-heading,
+header.masthead .post-heading,
+header.masthead .site-heading {
+  padding: 200px 0 150px;
+  color: white;
+}
+
+@media only screen and (min-width: 768px) {
+  header.masthead .page-heading,
+  header.masthead .post-heading,
+  header.masthead .site-heading {
+    padding: 200px 0;
+  }
+}
+
+header.masthead .page-heading,
+header.masthead .site-heading {
+  text-align: center;
+}
+
+header.masthead .page-heading h1,
+header.masthead .site-heading h1 {
+  font-size: 50px;
+  margin-top: 0;
+}
+
+header.masthead .page-heading .subheading,
+header.masthead .site-heading .subheading {
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.1;
+  display: block;
+  margin: 10px 0 0;
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #212529;
+  transition: all 0.2s;
+}
+
+
+p {
+  line-height: 1.5;
+  margin: 30px 0;
+}
+
+p  {
+  text-decoration: underline;
+}
+
+.color-box {
+background-color: grey;
+}

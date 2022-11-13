@@ -1,0 +1,58 @@
+
+{% include "header.html" %}
+<!--{% import "bootstrap/wtf.html" as wtf %}-->
+
+<div class="container-fluid text-center form_width">
+
+    <div class="form_box"></div>
+
+    <h2>Give in Data</h2>
+    <br>
+    <br>
+
+
+  <form action="{{ url_for('wtf2') }}" method="POST">
+        {{ form.csrf_token }}
+     <p>
+      <h2>{{ form.account_name.label }}</h2> <br> {{ form.account_name(size=30) }}
+     </p>
+     <p>
+         {{ form.main_contact.label }} <br> {{ form.main_contact(size=30) }}
+     </p>
+      <p>
+          {{ form.role.label }} <br> {{ form.role }}
+      </p>
+     <p>
+         {{ form.email.label }} <br> {{ form.email(size=60) }}
+     </p>
+     <p>
+      {{ form.range.label }} <br> {{ form.range(min=0, max=10) }}
+     </p>
+      <p>
+      {{ form.accept_rules.label }} <br> {{ form.accept_rules }}
+     </p>
+     <p>
+      {{ form.multiple_file.label }} <br> {{ form.multiple_file }}
+     </p>
+      <h2>{{ form.body.label }}</h2> <br> {{ form.body }}
+
+
+      {{ form.submit }}
+
+      {{ ckeditor.load(pkg_type="full-all") }}
+      {{ ckeditor.config(name='body') }}
+
+
+  </form>
+
+<!-- {{ ckeditor.load() }}-->
+<!--    <form method="post">-->
+<!--        {{ ckeditor.create() }}-->
+<!--        <input Type="submit">-->
+<!--    </form>-->
+
+    </div>
+    
+</div>
+
+{% include "footer.html" %}

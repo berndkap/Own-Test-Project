@@ -1,0 +1,41 @@
+{% include "header.html" %}
+
+<header class="masthead" style="background-image: url(' {{ account.account_img }}')">
+<!--    <div class="overlay"></div>-->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            {% if is_edit: %}
+            <h1>Edit FoP</h1>
+            {% else: %}
+            <h1>Fields of Play</h1>
+            {% endif %}
+            <span class="subheading">List of all FoPs regarding chosen Account</span>
+          </div>
+        </div>
+      </div>
+    </div>
+</header>
+
+<div class="container-fluid text-center" style="background-color: white" >
+    <div class="row">
+        <div class="col-lg-12">
+            {% for fop in fop_list %}
+                <br>
+                <a href="{{ url_for('show_fop', fop_id=fop.id) }}">
+                    <h2> {{ fop.fop_name }} </h2>
+                </a>
+            <br>
+            {% endfor %}
+<br>
+            <a class="btn btn-primary float-right" href="{{url_for('show_account', account_id=account.id)}}">Back to Account</a>
+            <a class="btn btn-primary float-right" href="{{url_for('add_fop', account_id=account.id)}}">Add FoP</a>
+
+        </div>
+    </div>
+
+</div>
+
+
+{% include "footer.html" %}

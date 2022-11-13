@@ -1,0 +1,113 @@
+{% include "header.html" %}
+
+
+<div class="container-fluid text-center" style="background-color: white" >
+    <div class="row">
+        <div class="col-lg-6" >
+            <div class="form_box">
+                <h2>Enter new Account</h2>
+            </div>
+
+            <form action="/new-account" method="post">
+
+                <div class="form_box">
+                    <label>Account</label>
+                    <input type="text" placeholder="Account Name" name="account_name">
+                    <label>Branch</label>
+                    <input type="text" placeholder="Branch" name="branch_name">
+                </div>
+
+<!--                <label for="customRange1" class="form-label">Example range</label>-->
+                <div class="form_box">
+                    <label>Example Range</label>
+                    <input type="range" class="form-range range_box" id="customRange1" name="number">
+                </div>
+
+                <div class="form_box">
+                    <select class="form-select" aria-label="Default select example" name="selected_name">
+                      <option selected>Open this select menu</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                    </select>
+                </div>
+<!--                checkbox-->
+                <div class="form_box">
+                    <div class="form-check form-check-reverse">
+                      <input class="form-check-input" type="checkbox" value="edit" id="flexCheckDefault" name="check">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Default checkbox
+                      </label>
+                    </div>
+                    <div class="form-check form-check-reverse">
+                      <input class="form-check-input" type="checkbox" value="edity" id="flexCheckDefault1" name="check">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Default checkbox2
+                      </label>
+                    </div>
+                    <div class="form-check form-check-reverse">
+                      <input class="form-check-input" type="checkbox" value="delete" id="flexCheckChecked" name="check2" checked >
+                      <label class="form-check-label" for="flexCheckChecked">
+                        Checked checkbox
+                      </label>
+                    </div>
+                </div>
+<!--                Radio buttons-->
+                <div class="form_box">
+                    <div class="form-check form-check-reverse">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="bla">
+                      <label class="form-check-label" for="flexRadioDefault1">
+                        Default radio
+                      </label>
+                    </div>
+                    <div class="form-check form-check-reverse">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="bli">
+                      <label class="form-check-label" for="flexRadioDefault1">
+                        Default radio
+                      </label>
+                    </div>
+                    <div class="form-check form-check-reverse">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="blu" checked>
+                      <label class="form-check-label" for="flexRadioDefault2">
+                        Default checked radio
+                      </label>
+                    </div>
+                </div>
+<!--                switches-->
+                <div class="form_box">
+                      <div class="form-check form-check-reverse form-switch">
+                          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault1" value="sweet" name="switch1">
+                          <label class="form-check-label" for="flexSwitchCheckDefault1">Default switch checkbox input</label>
+                      </div>
+                      <div class="form-check form-check-reverse form-switch">
+                          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2" value="swoot" name="switch1">
+                          <label class="form-check-label" for="flexSwitchCheckDefault2">Default switch checkbox input2</label>
+                      </div>
+                      <div class="form-check form-check-reverse form-switch">
+                          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" value="swuut" name="switch1" checked>
+                          <label class="form-check-label" for="flexSwitchCheckChecked">Checked switch checkbox input</label>
+                      </div>
+                      <div class="form-check form-check-reverse form-switch">
+                          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
+                          <label class="form-check-label" for="flexSwitchCheckDisabled">Disabled switch checkbox input</label>
+                       </div>
+                      <div class="form-check form-check-reverse form-switch">
+                          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckCheckedDisabled" checked disabled>
+                          <label class="form-check-label" for="flexSwitchCheckCheckedDisabled">Disabled checked switch checkbox input</label>
+                      </div>
+                </div>
+
+                <button type="submit">Ok</button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<!--<div class="container-fluid text-center">-->
+<!--  <button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/accounts'">Add Account</button>-->
+<!--</div>-->
+
+{% include "footer.html" %}
