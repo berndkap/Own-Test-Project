@@ -16,7 +16,8 @@ Bootstrap(app)
 ckeditor = CKEditor()
 ckeditor.init_app(app)
 
-FILE_URL = 'sqlite:///C:/Users/kappesser/PycharmProjects/data/sam19.db'
+# FILE_URL = 'sqlite:///C:/Users/kappesser/PycharmProjects/data/sam19.db'
+FILE_URL = 'sqlite:///sam.db'
 COMPANY_ID = 'company.com'
 
 # connect to db
