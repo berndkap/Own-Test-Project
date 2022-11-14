@@ -11,8 +11,8 @@ import os
 
 
 app = Flask(__name__)
-# app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
-app.config['SECRET_KEY'] = '8BYkEfBA606donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get("SEC_KEY")
+# app.config['SECRET_KEY'] = '8BYkEfBA606donzWlSihBXox7C0sKR6b'
 Bootstrap(app)
 ckeditor = CKEditor()
 ckeditor.init_app(app)
@@ -223,7 +223,7 @@ def start():
 # start real implementation here!
 
 @app.route('/accounts')
-# @login_required
+@login_required
 def accounts():
 
     all_accounts = Overall_Account.query.all()
