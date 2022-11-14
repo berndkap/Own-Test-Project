@@ -23,7 +23,7 @@ COMPANY_ID = 'company.com'
 
 # connect to db
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", FILE_URL)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
