@@ -222,7 +222,7 @@ def start():
 # start real implementation here!
 
 @app.route('/accounts')
-@login_required
+# @login_required
 def accounts():
 
     all_accounts = Overall_Account.query.all()
