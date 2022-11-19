@@ -321,7 +321,7 @@ def add_fop(account_id):
 def show_fop(fop_id):
     form = Comment_FoP()
     requested_fop = Field_Of_Play.query.get(fop_id)
-    all_comments = Comment_FOP.query.all()
+    all_comments = Comment_FOP.query.filter_by(fop_to_comment=requested_fop).all()
     if form.validate_on_submit():
         comment = Comment_FOP(
             fop_comment=form.comment.data,
