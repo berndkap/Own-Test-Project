@@ -38,6 +38,38 @@
 
 </div>
 
-
 <br>
+<br>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2>Insights on Above Topics : Write your comments!</h2>
+
+        <form action="{{ url_for('show_fop', fop_id=fop.id) }}" method="POST">
+            {{ form.csrf_token }}
+            <h3>{{ form.comment.label }}</h3>
+            {{ form.comment() }}
+
+            {{ form.submit }}
+
+
+         {{ ckeditor.load() }}
+         {{ ckeditor.config(name='body') }}
+
+        </form>
+        <br>
+        {% for comment in all_comments: %}
+            <h3> Comment by {{ comment.fop_author.first_name }}:</h3>
+            <h3>  {{ comment.fop_comment|safe }} </h3>
+            <h3>>-------------------------------------------------<</h3>
+
+            <br>
+        {% endfor %}
+        <br>
+
+    </div>
+  </div>
+</div>
+
 {% include "footer.html" %}

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
 from flask_bootstrap import Bootstrap
-from forms import ProfileForm, CompleteForm, Account, FoP, Contact, RegisterForm, LoginForm
+from forms import ProfileForm, CompleteForm, Account, FoP, Contact, RegisterForm, LoginForm, Comment_FoP
 from flask_ckeditor import CKEditor
 from flask_sqlalchemy import SQLAlchemy
 from typing import Callable
@@ -18,7 +18,7 @@ ckeditor = CKEditor()
 ckeditor.init_app(app)
 
 # FILE_URL = 'sqlite:///C:/Users/kappesser/PycharmProjects/data/sam19.db'
-FILE_URL = 'sqlite:///sam19.db'
+FILE_URL = 'sqlite:///sam29.db'
 COMPANY_ID = 'company.com'
 
 # connect to db
@@ -43,10 +43,15 @@ login_manager.init_app(app)
 def load_user(user_id):
     return Member.query.get(int(user_id))
 
-fop_team = db.Table('fop_team',
-                    db.Column('member_id', db.Integer, db.ForeignKey('team.id')),
-                    db.Column('fop_id', db.Integer, db.ForeignKey('fop.id'))
-)
+
+class Association(db.Model):
+    __tablename__ ="association_table"
+    member_id = db.Column(db.ForeignKey("team.id"), primary_key=True)
+    fop_id = db.Column(db.ForeignKey("fop.id"), primary_key=True)
+    role = db.Column(db.String(20), nullable=False)
+
+    current_fop = relationship("Field_Of_Play", back_populates="associated_members")
+    assigned_member = relationship("Member", back_populates="associated_fops")
 
 
 class Member(UserMixin, db.Model):
@@ -56,7 +61,9 @@ class Member(UserMixin, db.Model):
     last_name = db.Column(db.String(250), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    assigned_fops = relationship('Field_Of_Play', secondary=fop_team, back_populates='assigned_members')
+    comment_fop = relationship("Comment_FOP", back_populates="fop_author")
+    # assigned_fops = relationship('Field_Of_Play', secondary=fop_team, back_populates='assigned_members')
+    associated_fops = relationship("Association", back_populates="assigned_member")
 
 
 class Overall_Account(db.Model):
@@ -75,13 +82,15 @@ class Field_Of_Play(db.Model):
     # large_account = relationship("Overall_Account", back_populates="fops")
     large_account = relationship("Overall_Account", back_populates="fops")
     contacts = relationship("Buying_Center", back_populates="dedicated_fop")
+    comments = relationship("Comment_FOP", back_populates="fop_to_comment" )
 
     fop_name = db.Column(db.String(250), unique=True, nullable=False)
     fop_description = db.Column(db.Text, nullable=False)
     fop_business = db.Column(db.Text, nullable=False)
     value_add = db.Column(db.Text, nullable=False)
     customer_perception = db.Column(db.Text, nullable=False)
-    assigned_members = relationship("Member", secondary=fop_team, back_populates="assigned_fops")
+    # assigned_members = relationship("Member", secondary=fop_team, back_populates="assigned_fops")
+    associated_members = relationship("Association", back_populates="current_fop")
 
 class Buying_Center(db.Model):
     __tablename__ = "contact"
@@ -94,6 +103,14 @@ class Buying_Center(db.Model):
     contact_relation = db.Column(db.Integer(), nullable=False)
     contact_significance = db.Column(db.Integer(), nullable=False)
 
+class Comment_FOP(db.Model):
+    __tablename__ = "comment_fop"
+    id = db.Column(db.Integer, primary_key=True)
+    fop_id = db.Column(db.Integer, db.ForeignKey("fop.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("team.id"))
+    fop_comment = db.Column(db.Text, nullable=False)
+    fop_to_comment = relationship("Field_Of_Play", back_populates="comments")
+    fop_author = relationship("Member", back_populates="comment_fop")
 
 db.create_all()
 
@@ -225,7 +242,6 @@ def start():
 @app.route('/accounts')
 @login_required
 def accounts():
-
     all_accounts = Overall_Account.query.all()
     return render_template('list_accounts.html', accounts=all_accounts, current_user=current_user)
 
@@ -247,6 +263,7 @@ def add_new_account():
         db.session.commit()
         return redirect(url_for('accounts'))
     return render_template('add_account.html', form=form)
+
 
 @app.route('/account/<int:account_id>', methods=['GET', 'POST'])
 def show_account(account_id):
@@ -275,7 +292,6 @@ def edit_account(account_id):
 
 @app.route('/fop_list/<int:account_id>')
 def show_fop_list(account_id):
-    print("yes!!")
     current_account = Overall_Account.query.get(account_id)
     fop_list = Field_Of_Play.query.filter_by(account_id=account_id).all()
     # print(fop_list)
@@ -284,7 +300,6 @@ def show_fop_list(account_id):
 
 @app.route('/add_fop/<int:account_id>', methods=['GET', 'POST'])
 def add_fop(account_id):
-    print("success")
     current_account = Overall_Account.query.get(account_id)
     form = FoP()
     if form.validate_on_submit():
@@ -302,13 +317,22 @@ def add_fop(account_id):
 
     return render_template('add_fop.html', form=form, account=current_account)
 
-@app.route('/fop/<int:fop_id>')
+@app.route('/fop/<int:fop_id>', methods=['GET', 'POST'])
 def show_fop(fop_id):
-    print("angekommen")
+    form = Comment_FoP()
     requested_fop = Field_Of_Play.query.get(fop_id)
-    print(requested_fop)
-    print(fop_id)
-    return render_template('show_fop.html', fop=requested_fop)
+    all_comments = Comment_FOP.query.all()
+    if form.validate_on_submit():
+        comment = Comment_FOP(
+            fop_comment=form.comment.data,
+            fop_to_comment=requested_fop,
+            fop_author=current_user
+        )
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('show_fop', fop_id=fop_id))
+
+    return render_template('show_fop.html', form=form, fop=requested_fop, all_comments=all_comments)
 
 @app.route('/edit_fop/<int:fop_id>', methods=['GET', 'POST'])
 def edit_fop(fop_id):
@@ -378,35 +402,59 @@ def edit_contact(contact_id):
         db.session.commit()
         return redirect(url_for('show_buying_center', fop_id=current_contact.dedicated_fop.id))
 
-
     return render_template('add_contact.html', form=form, contact_id=contact_id, is_edit=True)
 
 @app.route('/fop_team/<int:fop_id>', methods=['GET', 'POST'])
 def show_fop_team(fop_id):
     fop = Field_Of_Play.query.get(fop_id)
-    fop_team = fop.assigned_members
-    return render_template("show_fop_team.html", fop_team=fop_team, fop_id=fop_id)
+
+    all_fop_associations = Association.query.filter_by(current_fop=fop).all()
+    fop_team = [member.assigned_member for member in all_fop_associations]
+
+    return render_template("show_fop_team.html", fop_team=fop_team, all_fop_associations=all_fop_associations, fop_id=fop_id)
 
 @app.route('/assign_members/<int:fop_id>', methods=['GET', 'POST'])
 def assign_members(fop_id):
     all_members = Member.query.all()
     fop = Field_Of_Play.query.get(fop_id)
-    fop_team = fop.assigned_members
+    all_fop_associations = Association.query.filter_by(current_fop=fop).all()
+    fop_team = [member.assigned_member for member in all_fop_associations]
 
     if request.method == 'POST':
             assigned_member_ids = request.form.getlist('check')
             assigned_member_list = [Member.query.get(id) for id in assigned_member_ids]
 
+            assigned_roles = request.form.getlist('select')
+            id_list = []
+            index = 0
+
+            for member in all_members:
+                if member in assigned_member_list:
+                    id_list.append(all_members.index(member))
+
             for member in assigned_member_list:
                 if member not in fop_team:
-                    fop.assigned_members.append(member)
+                    role = assigned_roles[id_list[index]]
+                    associations = Association(
+                        role=role,
+                        assigned_member=member,
+                        current_fop=fop
+                    )
+                    db.session.add(associations)
+                    db.session.commit()
+                index = index + 1
+
             for member in fop_team:
                 if member not in assigned_member_list:
-                    fop.assigned_members.remove(member)
-            db.session.commit()
+                    association_to_delete = Association.query.filter_by(assigned_member=member).first()
+                    db.session.delete(association_to_delete)
+                    db.session.commit()
+
             return redirect(url_for('show_fop_team', fop_id=fop_id))
 
     return render_template("assign_members.html", all_members=all_members, fop_id=fop_id, fop_team=fop_team )
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

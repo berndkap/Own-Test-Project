@@ -19,6 +19,7 @@
       <th scope="col">id</th>
       <th scope="col">First Name</th>
       <th scope="col">Last Name</th>
+      <th scope="col">Role</th>
       <th scope="col">Select</th>
     </tr>
   </thead>
@@ -32,6 +33,14 @@
       <th scope="row">{{member.id }}</th>
       <td>{{ member.first_name }}</td>
       <td>{{ member.last_name }}</td>
+      <td>
+        <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="select">
+          <option selected>none</option>
+          <option value="Account Manager">Account Manager</option>
+          <option value="Product Delivery">Product Delivery</option>
+          <option value="Consultant">Consultant</option>
+        </select>
+      </td>
       <td>
         <div class="form-check">
           {% if member in fop_team : %}

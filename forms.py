@@ -60,3 +60,7 @@ class LoginForm(FlaskForm):
     email = EmailField(label='Email Address', validators=[DataRequired()])
     password = PasswordField(label='Password', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class Comment_FoP(FlaskForm):
+    comment = CKEditorField('Comment FoP')
+    submit = SubmitField('Submit')
