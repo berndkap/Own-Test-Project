@@ -29,7 +29,7 @@ h3 {
 }
 
 .container-fluid {
-padding: 0px 12px ;
+padding: 0% 0% ;
 }
 
 .text_box {
@@ -167,4 +167,18 @@ p  {
 
 .color-box {
 background-color: grey;
+}
+
+.strategy-color {
+    color: blue;
+}
+
+.color-white {
+    color: white;
+}
+
+.right-pos {
+    color: red;
+    position: absolute;
+    right: 100px;
 }

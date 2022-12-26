@@ -1,14 +1,12 @@
 {% include "header.html" %}
 
-<h2>Hello {{ current_user.first_name }}</h2>
+
 
 <div class="container-fluid text-center" style="background-color: white" >
     <div class="row">
         <div class="col-lg-12">
-
             {% for account in accounts %}
-
-<br>
+                <br>
                 <a href="{{ url_for('show_account', account_id=account.id) }}">
                     <h2>
                         {{ account.name }}
@@ -16,17 +14,9 @@
                     <h3>
                         {{ account.branch }}
                     </h3>
-
-
-
                 </a>
-<br>
-
-
+                <br>
             {% endfor %}
-
-
-
         </div>
     </div>
 
@@ -38,7 +28,7 @@
 <!--  <button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/wtforms_layout'">WTForms New Account</button>-->
 <!--  <button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/wtf2'">WTF2 New Account</button>-->
 <!--  <button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/wtf3'">WTF3 New Account</button>-->
-  <button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/new_account'">Add New Account</button>
+<button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/new_account'">Add New Account</button>
 </div>
 
 {% include "footer.html" %}

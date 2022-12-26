@@ -1,0 +1,252 @@
+{% include "header.html" %}
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <br>
+      <h2>FoP Strategy:</h2>
+      <br>
+      <h2>{{ current_fop.fop_name }}</h2>
+      <br>
+      <h2>Vision Statement</h2>
+      <br>
+
+    </div>
+  </div>
+</div>
+
+<div class="container">
+   <div class="row">
+<!--        <div class="col-lg-6 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Where are we standing today </h3> {{ vision.status_today|safe }} </div>-->
+        <div class="col-lg-12 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Where will we be in 3-5 years </h3> {{vision.charter_statement|safe}}
+        <button class="btn btn-primary define-goals" >Define Goals</button>
+            </div>
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How do we contribute to their Business </h3> </div>-->
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How does Customer see our Role </h3> {</div>-->
+   </div>
+</div>
+
+<br>
+<div class="container goals">
+    <div class="row">
+        <form action="{{ url_for('strategy', fop_id=fop_id)}}" method="POST">
+
+        {{ form.csrf_token }}
+        <h5 style="color: black">
+            {{ form.goal_title.label }}: {{ form.goal_title(size=20) }}
+            </h5>
+        <h5 style="color: black">
+            {{ form.goal_description.label }}: {{ form.goal_description(size=100) }}
+            </h5>
+        <h5 style="color: black">
+            {{ form.related_vision_topic.label }}: {{ form.related_vision_topic }}
+            </h5>
+        {{ form.submit }}
+        </form>
+    </div>
+</div>
+
+<br>
+<br>
+
+<div class="container">
+   <div class="row">
+<!--        <div class="col-lg-6 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Where are we standing today </h3> {{ vision.status_today|safe }} </div>-->
+        <div class="col-lg-12 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Stakeholder Relation </h3> {{vision_details.stakeholder_relation|safe}}
+            <button class="btn btn-primary show-goals-stake" >Show Goals</button>
+        </div>
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How do we contribute to their Business </h3> </div>-->
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How does Customer see our Role </h3> {</div>-->
+   </div>
+</div>
+
+
+<br>
+
+<div class="container goal-list-stake">
+   <div class="row">
+        <table class="table table-borderless">
+             <thead>
+                <tr>
+                  <th scope="col"><h4>id</h4></th>
+                    <th scope="col"><h4>Goal Title</h4></th>
+                  <th scope="col"><h4>Goal Description</h4></th>
+                </tr>
+              </thead>
+            <tbody>
+            {% for goal in all_goals: %}
+                {% if goal.related_vision_detail == "Stakeholder Relation" : %}
+                <tr>
+
+                  <th scope="row">{{goal.id }}</th>
+                  <td><h5>{{ goal.goal_title }}</h5></td>
+                  <td><h5>{{ goal.goal_description }}</h5></td>
+                  <td> <a class="btn btn-primary  float-right" href="{{url_for('add_tasks', fop_id=fop_id, goal_id=goal.id)}}">add task</a></td>
+                  <br>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+
+   </div>
+</div>
+
+
+<div class="container">
+   <div class="row">
+<!--        <div class="col-lg-6 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Where are we standing today </h3> {{ vision.status_today|safe }} </div>-->
+        <div class="col-lg-12 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Business Context </h3> {{vision_details.business_context|safe}}
+            <button class="btn btn-primary show-goals-business" >Show Goals</button>
+        </div>
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How do we contribute to their Business </h3> </div>-->
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How does Customer see our Role </h3> {</div>-->
+   </div>
+</div>
+
+
+<br>
+
+<div class="container goal-list-business">
+   <div class="row">
+        <table class="table table-borderless">
+             <thead>
+                <tr>
+                  <th scope="col"><h4>id</h4></th>
+                    <th scope="col"><h4>Goal Title</h4></th>
+                  <th scope="col"><h4>Goal Description</h4></th>
+                </tr>
+              </thead>
+            <tbody>
+            {% for goal in all_goals: %}
+                {% if goal.related_vision_detail == "Business Context" : %}
+                <tr>
+
+                  <th scope="row">{{goal.id }}</th>
+                  <td><h5>{{ goal.goal_title }}</h5></td>
+                  <td><h5>{{ goal.goal_description }}</h5></td>
+                  <td> <a class="btn btn-primary  float-right" href="{{url_for('add_tasks', fop_id=fop_id, goal_id=goal.id)}}">add task</a></td>
+                  <br>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+
+   </div>
+</div>
+
+<div class="container">
+   <div class="row">
+<!--        <div class="col-lg-6 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Where are we standing today </h3> {{ vision.status_today|safe }} </div>-->
+        <div class="col-lg-12 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Value Add </h3> {{vision_details.value_add|safe}}
+            <button class="btn btn-primary show-goals-value" >Show Goals</button>
+        </div>
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How do we contribute to their Business </h3> </div>-->
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How does Customer see our Role </h3> {</div>-->
+   </div>
+</div>
+
+
+<br>
+
+<div class="container goal-list-value">
+   <div class="row">
+        <table class="table table-borderless">
+             <thead>
+                <tr>
+                  <th scope="col"><h4>id</h4></th>
+                    <th scope="col"><h4>Goal Title</h4></th>
+                  <th scope="col"><h4>Goal Description</h4></th>
+                </tr>
+              </thead>
+            <tbody>
+            {% for goal in all_goals: %}
+                {% if goal.related_vision_detail == "Value Add" : %}
+                <tr>
+
+                  <th scope="row">{{goal.id }}</th>
+                  <td><h5>{{ goal.goal_title }}</h5></td>
+                  <td><h5>{{ goal.goal_description }}</h5></td>
+                  <td> <a class="btn btn-primary  float-right" href="{{url_for('add_tasks', fop_id=fop_id, goal_id=goal.id)}}">add task</a></td>
+                  <br>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+
+   </div>
+</div>
+
+<div class="container">
+   <div class="row">
+<!--        <div class="col-lg-6 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Where are we standing today </h3> {{ vision.status_today|safe }} </div>-->
+        <div class="col-lg-12 col-md-12" style="background-color:grey; border: 1px solid" > <h3> Customer Perception </h3> {{vision_details.customer_perception|safe}}
+            <button class="btn btn-primary show-goals-percept">Show Goals</button>
+        </div>
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How do we contribute to their Business </h3> </div>-->
+<!--        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How does Customer see our Role </h3> {</div>-->
+   </div>
+</div>
+
+
+<br>
+
+<div class="container goal-list-percept">
+   <div class="row">
+        <table class="table table-borderless">
+             <thead>
+                <tr>
+                  <th scope="col"><h4>id</h4></th>
+                    <th scope="col"><h4>Goal Title</h4></th>
+                  <th scope="col"><h4>Goal Description</h4></th>
+                </tr>
+              </thead>
+            <tbody>
+            {% for goal in all_goals: %}
+                {% if goal.related_vision_detail == "Customer Perception" : %}
+                <tr>
+
+                  <th scope="row">{{goal.id }}</th>
+                  <td><h5>{{ goal.goal_title }}</h5></td>
+                  <td><h5>{{ goal.goal_description }}</h5></td>
+                  <td> <a class="btn btn-primary  float-right" href="{{url_for('add_tasks', fop_id=fop_id, goal_id=goal.id)}}">add task</a></td>
+                  <br>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+
+   </div>
+</div>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+<br>
+
+
+<div class="container">
+
+    <!--     <button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/new_account'">Edit Account</button>-->
+      <a class="btn btn-primary float-right" href="{{url_for('show_vision', fop_id=fop_id)}}">Back to Vision</a>
+    <!--  <a class="btn btn-primary float-right" href="{{url_for('edit_vision', fop_id=fop_id)}}">Edit Vision</a>-->
+      <a class="btn btn-primary float-right" href="{{url_for('show_tasks', fop_id=fop_id)}}">Show Task List</a>
+
+</div>
+
+
+<br>
+{% include "footer.html" %}

@@ -1,0 +1,45 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% include "header.html" %}
+
+
+<header class="masthead" style="">
+    <!--    <div class="overlay"></div>-->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            {% if is_edit: %}
+            <h1 style="color: black">Edit your FoP Vision in Detail</h1>
+              <h2>Start from where you are standing now and create</h2>
+              <br>
+              <h2> "Charter Statement" where you are in 3-5 Years</h2>
+            {% else: %}
+            <h1 style="color: black">Create your Task for following Goal:</h1>
+              <h2>{{ current_goal.goal_title }}</h2>
+              <br>
+              <h2> {{current_goal.goal_description}}</h2>
+            {% endif %}
+            <span class="subheading">High Level Description of the overall Account</span>
+          </div>
+        </div>
+      </div>
+<!--    </div>-->
+</header>
+
+
+ <div class="container">
+    <div class="row ">
+        <div class="color-box">
+            <div class="col-lg-8 col-md-10 mx-auto">
+
+
+         {{ ckeditor.load() }}
+         {{ ckeditor.config(name='body') }}
+         {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+
+            </div>
+        </div>
+    </div>
+  </div>
+
+{% include "footer.html" %}

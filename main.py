@@ -1,6 +1,6 @@
-from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
 from flask_bootstrap import Bootstrap
-from forms import ProfileForm, CompleteForm, Account, FoP, Contact, RegisterForm, LoginForm, Comment_FoP
+from forms import ProfileForm, CompleteForm, Account, FoP, Contact, RegisterForm, LoginForm, Comment_FoP, Vision_FoP, Comment_Vision, Vision_Details, Goals, Task_Item
 from flask_ckeditor import CKEditor
 from flask_sqlalchemy import SQLAlchemy
 from typing import Callable
@@ -18,7 +18,7 @@ ckeditor = CKEditor()
 ckeditor.init_app(app)
 
 # FILE_URL = 'sqlite:///C:/Users/kappesser/PycharmProjects/data/sam19.db'
-FILE_URL = 'sqlite:///sam29.db'
+FILE_URL = 'sqlite:///sam36.db'
 COMPANY_ID = 'company.com'
 
 # connect to db
@@ -62,6 +62,7 @@ class Member(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     comment_fop = relationship("Comment_FOP", back_populates="fop_author")
+    comment_vision = relationship("Comments_Vision", back_populates="comment_author")
     # assigned_fops = relationship('Field_Of_Play', secondary=fop_team, back_populates='assigned_members')
     associated_fops = relationship("Association", back_populates="assigned_member")
 
@@ -83,6 +84,7 @@ class Field_Of_Play(db.Model):
     large_account = relationship("Overall_Account", back_populates="fops")
     contacts = relationship("Buying_Center", back_populates="dedicated_fop")
     comments = relationship("Comment_FOP", back_populates="fop_to_comment" )
+    vision = relationship("Vision_FOP", back_populates="fop_vision")
 
     fop_name = db.Column(db.String(250), unique=True, nullable=False)
     fop_description = db.Column(db.Text, nullable=False)
@@ -112,8 +114,61 @@ class Comment_FOP(db.Model):
     fop_to_comment = relationship("Field_Of_Play", back_populates="comments")
     fop_author = relationship("Member", back_populates="comment_fop")
 
-db.create_all()
+class Vision_FOP(db.Model):
+    __tablename__ = "vision_fop"
+    id = db.Column(db.Integer, primary_key=True)
+    fop_id = db.Column(db.Integer, db.ForeignKey("fop.id"))
+    status_today = db.Column(db.Text, nullable=False)
+    charter_statement = db.Column(db.Text, nullable=False)
+    fop_vision = relationship("Field_Of_Play", back_populates="vision")
+    comments = relationship("Comments_Vision", back_populates="vision_to_comment")
+    details = relationship("Detailed_Vision", back_populates="vision_of_details")
 
+class Comments_Vision(db.Model):
+    __tablename__ = "comment_vision"
+    id = db.Column(db.Integer, primary_key=True)
+    vision_id = db.Column(db.Integer, db.ForeignKey("vision_fop.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("team.id"))
+    vision_comment = db.Column(db.Text, nullable=False)
+    vision_to_comment = relationship("Vision_FOP", back_populates="comments")
+    comment_author = relationship("Member", back_populates="comment_vision")
+
+class Detailed_Vision(db.Model):
+    __tablename__ = "vision_details"
+    id = db.Column(db.Integer, primary_key=True)
+    vision_id = db.Column(db.Integer, db.ForeignKey("vision_fop.id"))
+
+    stakeholder_relation = db.Column(db.Text, nullable=False)
+    business_context = db.Column(db.Text, nullable=False)
+    value_add = db.Column(db.Text, nullable=False)
+    customer_perception = db.Column(db.Text, nullable=False)
+    vision_of_details = relationship("Vision_FOP", back_populates="details")
+    goals = relationship("Related_Goals", back_populates="related_detailed_vision")
+
+
+class Related_Goals(db.Model):
+    __tablename__ = "goals"
+    id = db.Column(db.Integer, primary_key=True)
+    detailed_vision_id = db.Column(db.Integer, db.ForeignKey("vision_details.id"))
+    goal_title = db.Column(db.Text, nullable=False)
+    goal_description = db.Column(db.Text, nullable=False)
+    related_vision_detail = db.Column(db.Text, nullable=False)
+    goal_reached = db.Column(db.Integer, nullable=False)
+    related_detailed_vision = relationship("Detailed_Vision", back_populates="goals")
+    tasks = relationship("Tasks", back_populates="related_goal")
+
+class Tasks(db.Model):
+    __tablename__ = "tasks"
+    id = db.Column(db.Integer, primary_key=True)
+    goal_id = db.Column(db.Integer, db.ForeignKey("goals.id"))
+    task_title = db.Column(db.Text, nullable=False)
+    task_description = db.Column(db.Text, nullable=False)
+    task_owner = db.Column(db.Text, nullable=False)
+    task_status = db.Column(db.Text, nullable=False)
+    due_date = db.Column(db.Text, nullable=False)
+    related_goal = relationship("Related_Goals", back_populates="tasks")
+
+db.create_all()
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -141,8 +196,6 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    # all_members = db.session.query(Member).all()
-
     if form.validate_on_submit():
         login_email = form.email.data
         login_member = Member.query.filter_by(email=login_email).first()
@@ -171,74 +224,6 @@ def logout():
 def start():
     return render_template('index.html')
 
-# @app.route('/new-account', methods=['GET', 'POST'])
-# def new_account():
-#
-#     if request.method == 'POST':
-#         data = request.form.get
-#         account = request.form['account_name']
-#         branch = request.form['branch_name']
-#         number = request.form['number']
-#         select = request.form['selected_name']
-#         value = request.form.getlist('check')
-#         value2 = request.form.getlist('check2')
-#         radio_value = request.form.getlist('flexRadioDefault')
-#         switch1 = request.form.getlist('switch1')
-#         print(account)
-#         print(branch)
-#         print(number)
-#         print(select)
-#         print(value)
-#         print(value2)
-#         print(radio_value)
-#         print(switch1)
-#
-#         return redirect(url_for('start'))
-#
-#     return render_template('new-account.html')
-
-# @app.route('/wtforms_layout', methods=['GET', 'POST'])
-# def wtf_layout():
-#     print("soweit gekommen")
-#     form = ProfileForm()
-#     print("noch weiter")
-#     if form.validate_on_submit():
-#         print(form.account_name.data)
-#         print(form.main_contact.data)
-#         print(form.email.data)
-#         # print(form.birthday.data)
-#         # print(form.level.data)
-#         return redirect(url_for('start'))
-#     return render_template('wtf_flask_forms.html', form=form)
-
-# @app.route('/wtf2', methods=['GET', 'POST'])
-# def wtf2():
-#     form = ProfileForm()
-#     form.body.data = "This is a Description of main Activities and Business Goals of the Account"
-#     if form.validate_on_submit():
-#         print('Hello')
-#         print(form.account_name.data)
-#         print(form.main_contact.data)
-#         print(form.email.data)
-#         print(form.role.data)
-#         print(form.range.data)
-#         print(form.multiple_file.data)
-#         print(form.body.data)
-#         return redirect(url_for('start'))
-#
-#     return render_template('wtf2.html', form=form)
-
-# @app.route('/layout')
-# def layout_new_account():
-#     return render_template('layout-new-account.html')
-
-# @app.route('/wtf3', methods=['GET', 'POST'])
-# def wtf3():
-#     form = ProfileForm()
-#     return render_template(('wtf3.html'))
-
-# start real implementation here!
-
 @app.route('/accounts')
 @login_required
 def accounts():
@@ -258,7 +243,6 @@ def add_new_account():
             account_img=form.img_url.data,
             description=form.body.data
         )
-
         db.session.add(new_account)
         db.session.commit()
         return redirect(url_for('accounts'))
@@ -294,8 +278,6 @@ def edit_account(account_id):
 def show_fop_list(account_id):
     current_account = Overall_Account.query.get(account_id)
     fop_list = Field_Of_Play.query.filter_by(account_id=account_id).all()
-    # print(fop_list)
-    # print(fop_list[2].id)
     return render_template('list_fop.html', account=current_account, fop_list=fop_list)
 
 @app.route('/add_fop/<int:account_id>', methods=['GET', 'POST'])
@@ -344,16 +326,15 @@ def edit_fop(fop_id):
         fop_description=current_fop.fop_description,
         fop_business=current_fop.fop_business,
         our_contribution=current_fop.value_add,
-        customer_perception=current_fop.customer_perception,
-        # large_account=current_fop.large_account
+        customer_perception=current_fop.customer_perception
     )
+
     if form.validate_on_submit():
         current_fop.fop_name = form.fop_name.data
         current_fop.fop_description = form.fop_description.data
         current_fop.fop_business = form.fop_business.data
         current_fop.value_add = form.our_contribution.data
         current_fop.customer_perception = form.customer_perception.data
-        # large_account=current_account
         db.session.commit()
         return redirect(url_for('show_fop', fop_id=fop_id))
 
@@ -378,7 +359,6 @@ def add_contact(fop_id):
             contact_significance=form.contact_significance.data,
             dedicated_fop=current_fop
         )
-
         db.session.add(new_contact)
         db.session.commit()
         return redirect(url_for('show_buying_center', fop_id=fop_id))
@@ -407,7 +387,6 @@ def edit_contact(contact_id):
 @app.route('/fop_team/<int:fop_id>', methods=['GET', 'POST'])
 def show_fop_team(fop_id):
     fop = Field_Of_Play.query.get(fop_id)
-
     all_fop_associations = Association.query.filter_by(current_fop=fop).all()
     fop_team = [member.assigned_member for member in all_fop_associations]
 
@@ -453,6 +432,201 @@ def assign_members(fop_id):
             return redirect(url_for('show_fop_team', fop_id=fop_id))
 
     return render_template("assign_members.html", all_members=all_members, fop_id=fop_id, fop_team=fop_team )
+
+@app.route('/check_account_manager')
+def check_acm():
+    fop_name = request.args.get('a', 0, type=str)
+    current_fop = Field_Of_Play.query.filter_by(fop_name=fop_name).first()
+    all_fop_associations = Association.query.filter_by(current_fop=current_fop).all()
+    fop_team = [member.assigned_member for member in all_fop_associations]
+    print(fop_team)
+    if current_user not in fop_team:
+        result = False
+    else:
+            wright_association = Association.query.filter_by(current_fop=current_fop, assigned_member=current_user).first()
+            if wright_association.role == "Account Manager":
+                result = True
+            else:
+                result = False
+    return jsonify(result=result)
+
+@app.route('/show_vision/<int:fop_id>', methods=['GET', 'POST'])
+def show_vision(fop_id):
+    current_fop = Field_Of_Play.query.get(fop_id)
+    vision = Vision_FOP.query.filter_by(fop_vision=current_fop).first()
+    vision_details = Detailed_Vision.query.filter_by(vision_of_details=vision).first()
+    all_comments = Comments_Vision.query.filter_by(vision_to_comment=vision).all()
+    all_contacts = Buying_Center.query.filter_by(dedicated_fop=current_fop)
+    form = Comment_Vision()
+    if vision == None:
+        return redirect(url_for('add_vision', fop_id=fop_id))
+
+    if form.validate_on_submit():
+        comment = Comments_Vision(
+            vision_comment=form.comment.data,
+            vision_to_comment=vision,
+            comment_author=current_user
+        )
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('show_vision', fop_id=fop_id))
+
+    return render_template('show_vision.html', vision=vision, vision_details=vision_details, fop_id=fop_id, current_fop=current_fop, all_comments=all_comments, all_contacts=all_contacts, form=form)
+
+
+@app.route('/add_vision/<int:fop_id>', methods=['GET', 'POST'])
+def add_vision(fop_id):
+    current_fop = Field_Of_Play.query.get(fop_id)
+    form = Vision_FoP()
+    if form.validate_on_submit():
+        new_vision = Vision_FOP(
+            status_today=form.current_situation.data,
+            charter_statement=form.charter_statement.data,
+            fop_vision=current_fop
+        )
+        db.session.add(new_vision)
+        db.session.commit()
+        return redirect(url_for('show_vision', fop_id=fop_id))
+
+    return render_template('add_vision.html', form=form, fop_id=fop_id, is_edit=False)
+
+@app.route('/edit_vision/<int:fop_id>', methods=['GET', 'POST'])
+def edit_vision(fop_id):
+    current_fop = Field_Of_Play.query.get(fop_id)
+    vision = Vision_FOP.query.filter_by(fop_vision=current_fop).first()
+    form = Vision_FoP(
+        current_situation=vision.status_today,
+        charter_statement=vision.charter_statement
+    )
+    if form.validate_on_submit():
+        vision.status_today = form.current_situation.data
+        vision.charter_statement = form.charter_statement.data
+        db.session.commit()
+        return redirect(url_for('show_vision', fop_id=fop_id))
+
+    return render_template("add_vision.html", fop_id=fop_id,  form=form, is_edit=True)
+
+@app.route('/add_vision_details/<int:fop_id>', methods=['GET', 'POST'])
+def add_vision_details(fop_id):
+    current_fop = Field_Of_Play.query.get(fop_id)
+    vision = Vision_FOP.query.filter_by(fop_vision=current_fop).first()
+    form = Vision_Details()
+
+    if form.validate_on_submit():
+        vision_details = Detailed_Vision(
+            stakeholder_relation=form.stakeholder_relation.data,
+            business_context=form.business_context.data,
+            value_add=form.value_add.data,
+            customer_perception=form.customer_perception.data,
+            vision_of_details=vision
+        )
+        db.session.add(vision_details)
+        db.session.commit()
+        return redirect(url_for('show_vision', fop_id=fop_id))
+
+    return render_template('add_vision.html', form=form, fop_id=fop_id, is_edit=False)
+
+
+@app.route('/edit_vision_details/<int:fop_id>', methods=['GET', 'POST'])
+def edit_vision_details(fop_id):
+    current_fop = Field_Of_Play.query.get(fop_id)
+    vision = Vision_FOP.query.filter_by(fop_vision=current_fop).first()
+    vision_details = Detailed_Vision.query.filter_by(vision_of_details=vision).first()
+    form = Vision_Details(
+        stakeholder_relation=vision_details.stakeholder_relation,
+        business_context=vision_details.business_context,
+        value_add=vision_details.value_add,
+        customer_perception=vision_details.customer_perception
+    )
+    if form.validate_on_submit():
+        vision_details.stakeholder_relation = form.stakeholder_relation.data
+        vision_details.business_context = form.business_context.data
+        vision_details.value_add = form.value_add.data
+        vision_details.customer_perception = form.customer_perception.data
+        db.session.commit()
+        return redirect(url_for('show_vision', fop_id=fop_id))
+
+
+    return render_template("add_vision_details.html", form=form, fop_id=fop_id, is_edit=True)
+
+@app.route("/strategy/<int:fop_id>", methods=["GET", "POST"])
+def strategy(fop_id):
+    current_fop = Field_Of_Play.query.get(fop_id)
+    vision = Vision_FOP.query.filter_by(fop_vision=current_fop).first()
+    vision_details = Detailed_Vision.query.filter_by(vision_of_details=vision).first()
+    all_goals = Related_Goals.query.filter_by(related_detailed_vision=vision_details).all()
+    form = Goals()
+
+    if form.validate_on_submit():
+        print("stage2")
+        new_goal = Related_Goals(
+        goal_title=form.goal_title.data,
+        goal_description=form.goal_description.data,
+        goal_reached=0,
+        related_vision_detail=form.related_vision_topic.data,
+        related_detailed_vision=vision_details
+        )
+        db.session.add(new_goal)
+        db.session.commit()
+        return redirect(url_for('strategy', fop_id=fop_id))
+
+
+    return render_template("show_strategy.html", current_fop=current_fop, vision=vision, vision_details=vision_details, fop_id=fop_id, form=form, all_goals=all_goals)
+
+
+@app.route("/add_tasks/<int:goal_id>/<int:fop_id>", methods=["GET", "POST"])
+def add_tasks(goal_id, fop_id):
+    # current_fop = Field_Of_Play.query.get(fop_id)
+    # vision = Vision_FOP.query.filter_by(fop_vision=current_fop).first()
+    # vision_details = Detailed_Vision.query.filter_by(vision_of_details=vision).first()
+    current_goal = Related_Goals.query.get(goal_id)
+    form = Task_Item(
+        due_date="  sth. like: March 2023, or 25.05.2023 "
+    )
+    if form.validate_on_submit():
+        new_task = Tasks(
+            task_title=form.task_title.data,
+            task_description=form.task_description.data,
+            task_owner=form.task_owner.data,
+            due_date=form.due_date.data,
+            task_status="open",
+            related_goal=current_goal
+        )
+        db.session.add(new_task)
+        db.session.commit()
+        return redirect(url_for('strategy', fop_id=fop_id))
+    return render_template("add_task.html", form=form, current_goal=current_goal, is_edit=False)
+
+
+
+@app.route("/show_tasks/<int:fop_id>", methods=["GET", "POST"])
+def show_tasks(fop_id):
+    current_fop = Field_Of_Play.query.get(fop_id)
+    vision = Vision_FOP.query.filter_by(fop_vision=current_fop).first()
+    vision_details = Detailed_Vision.query.filter_by(vision_of_details=vision).first()
+    all_goals = Related_Goals.query.filter_by(related_detailed_vision=vision_details).all()
+
+    all_tasks_lists = []
+    for goal in all_goals:
+        tasks_per_goal = Tasks.query.filter_by(related_goal=goal).all()
+        all_tasks_lists.append(tasks_per_goal)
+    all_tasks = sum(all_tasks_lists, [])
+    print(f"length of all_tasks: {len(all_tasks)}")
+
+    if request.method == 'POST':
+        assigned_status_list = request.form.getlist('select')
+        print(assigned_status_list)
+
+        for i in range(0, len(all_tasks)):
+            all_tasks[i].task_status = assigned_status_list[i]
+            print(all_tasks[i].task_status)
+            db.session.commit()
+
+
+
+
+    return render_template("show_tasks.html", all_tasks=all_tasks, current_fop=current_fop, fop_id=fop_id)
+
 
 
 

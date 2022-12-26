@@ -64,3 +64,33 @@ class LoginForm(FlaskForm):
 class Comment_FoP(FlaskForm):
     comment = CKEditorField('Comment FoP')
     submit = SubmitField('Submit')
+
+class Vision_FoP(FlaskForm):
+    current_situation = CKEditorField('Today')
+    charter_statement = CKEditorField('In_3-5_years')
+    submit = SubmitField('Submit')
+
+class Comment_Vision(FlaskForm):
+    comment = CKEditorField('Comment Vision')
+    submit = SubmitField('Submit')
+
+class Vision_Details(FlaskForm):
+    stakeholder_relation = CKEditorField('Stakeholder Relation')
+    business_context = CKEditorField('Business Context')
+    value_add = CKEditorField('Value Add')
+    customer_perception = CKEditorField('Customer_perception')
+    submit = SubmitField('Submit')
+
+class Goals(FlaskForm):
+    goal_title = StringField('Goal Title', [validators.Length(min=0, max=25)])
+    goal_description = StringField('Goal Description', [validators.Length(min=0, max=200)])
+    related_vision_topic = SelectField(label='Vision-Topic', choices=['Stakeholder Relation', 'Business Context', 'Value Add', 'Customer Perception'])
+    submit = SubmitField('Submit')
+
+class Task_Item(FlaskForm):
+    task_title = StringField('Task Title', [validators.Length(min=0, max=25)])
+    task_description = CKEditorField('Task Description')
+    task_owner = StringField('Who is in Charge', [validators.Length(min=0, max=25)])
+    due_date = StringField('Due Date', [validators.Length(min=0, max=25)])
+    # due_date = DateTimeField('Due Date', format='%Y-%m-%d')
+    submit = SubmitField('Submit')

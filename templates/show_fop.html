@@ -5,8 +5,11 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1>FoP Name</h1>
-        <h2> {{ fop.fop_name }} </h2><br>
+        <br>
+      <h2>FoP Name:</h2>
+        <br>
+        <h2 class="fop_name">{{ fop.fop_name }}</h2><br>
+
     </div>
   </div>
 </div>
@@ -14,24 +17,57 @@
 
 
 
- <div class="container" style="background-color:grey">
+<!-- <div class="container" style="background-color:grey">-->
+<!-- <div class="container-fluid">-->
+<!--   <div class="row">-->
+<!--        <div class="col-3" style="background-color:grey; border: 1px solid" > <h3> Description of the FoP </h3> {{ fop.fop_description|safe }} </div>-->
+<!--        <div class="col-3" style="background-color:grey; border: 1px solid" > <h3> Business of FoP </h3> {{fop.fop_business |safe}}</div>-->
+<!--        <div class="col-3" style="background-color:grey; border: 1px solid" > <h3>How do we contribute to their Business </h3> {{fop.value_add |safe}}</div>-->
+<!--        <div class="col-3" style="background-color:grey; border: 1px solid" > <h3>How does Customer see our Role </h3> {{fop.customer_perception |safe}}</div>-->
+<!--   </div>-->
+<!--</div>-->
+
+<!--<div class="container-fluid" >-->
+<!--   <div class="row">-->
+<!--        <div class="col-3" style="background-color:grey; border: 1px solid" > <h3> Description of the FoP </h3> {{ fop.fop_description|safe }} </div>-->
+<!--        <div class="col-3" style="background-color:grey; border: 1px solid" > <h3> Business of FoP </h3> {{fop.fop_business |safe}}</div>-->
+<!--        <div class="col-3" style="background-color:grey; border: 1px solid" > <h3>How do we contribute to their Business </h3> {{fop.value_add |safe}}</div>-->
+<!--        <div class="col-3" style="background-color:grey; border: 1px solid" > <h3>How does Customer see our Role </h3> {{fop.customer_perception |safe}}</div>-->
+<!--   </div>-->
+<!--</div>-->
+
+<!--<div class="container" style="background-color:grey">-->
+<!--   <div class="row">-->
+<!--       <div class="col-6" style="background-color:red">-->
+<!--           col-->
+<!--       </div>-->
+<!--   </div>-->
+
+<!--</div>-->
+
+
+<div class="container">
    <div class="row">
-    <div class="col-3" > <h3> Description of the FoP </h3> {{ fop.fop_description|safe }} </div>
-    <div class="col-3" > <h3> Business of FoP </h3> {{fop.fop_business |safe}}</div>
-       <div class="col-3" > <h3>How do we contribute to their Business </h3> {{fop.value_add |safe}}</div>
-       <div class="col-3" > <h3>How does Customer see our Role </h3> {{fop.customer_perception |safe}}</div>
+        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3> Description of the FoP </h3> {{ fop.fop_description|safe }} </div>
+        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3> Business of FoP </h3> {{fop.fop_business |safe}}</div>
+        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How do we contribute to their Business </h3> {{fop.value_add |safe}}</div>
+        <div class="col-lg-3 col-md-6" style="background-color:grey; border: 1px solid" > <h3>How does Customer see our Role </h3> {{fop.customer_perception |safe}}</div>
    </div>
 </div>
+
+
+
 
 <br>
 
 <div class="container">
 
 <!--     <button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/new_account'">Edit Account</button>-->
-     <a class="btn btn-primary float-right" href="{{url_for('show_fop_list', account_id=fop.large_account.id)}}">Back to FoP-List</a>
-    <a class="btn btn-primary float-right" href="{{url_for('edit_fop', fop_id=fop.id)}}">Edit FoP</a>
+    <a class="btn btn-primary float-right" href="{{url_for('show_fop_list', account_id=fop.large_account.id)}}">Back to FoP-List</a>
+    <a class="btn btn-primary float-right authorize" href="{{url_for('edit_fop', fop_id=fop.id)}}">Edit FoP</a>
     <a class="btn btn-primary float-right" href="{{url_for('show_buying_center', fop_id=fop.id)}}">Show Buying Center</a>
     <a class="btn btn-primary float-right" href="{{url_for('show_fop_team', fop_id=fop.id)}}">Show FoP Team</a>
+    <a class="btn btn-primary float-right" href="{{url_for('show_vision', fop_id=fop.id)}}">Vision / Strategy</a>
 
 
 <!--     <button type="button" class="btn btn-primary btn-lg start-button" onclick="window.location.href='/fop'">See FoPs</button>-->
@@ -40,6 +76,7 @@
 
 <br>
 <br>
+
 
 <div class="container">
   <div class="row">
@@ -56,20 +93,40 @@
 
          {{ ckeditor.load() }}
          {{ ckeditor.config(name='body') }}
-
         </form>
-        <br>
-        {% for comment in all_comments: %}
-            <h3> Comment by {{ comment.fop_author.first_name }}:</h3>
-            <h3>  {{ comment.fop_comment|safe }} </h3>
-            <h3>>-------------------------------------------------<</h3>
-
-            <br>
-        {% endfor %}
-        <br>
-
     </div>
   </div>
 </div>
 
+        <br>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+        <button class="before">show comments</button>
+    </div>
+  </div>
+</div>
+
+<div class="container comments">
+  <div class="row">
+    <div class="col">
+
+        <br>
+        <h2>Comments:</h2>
+        {% for comment in all_comments: %}
+        <h3>Comment by {{ comment.fop_author.first_name }}:</h3>
+            <h3>  {{ comment.fop_comment|safe }} </h3>
+            <h3>>-------------------------------------------------<</h3>
+            <br>
+        {% endfor %}
+        <br>
+        <button class="after">hide comments</button>
+    </div>
+  </div>
+</div>
+
+
+
 {% include "footer.html" %}
+
