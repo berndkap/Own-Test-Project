@@ -1,12 +1,19 @@
 
-$("button.before").on("click", function() {
-    $("div.comments").slideDown();
+//$("button.before").on("click", function() {
+//    $("div.comments").slideDown();
+//});
+//
+//$("button.after").on("click", function() {
+//    $("div.comments").slideUp();
+//});
+
+$("button.vision-details").on("click", function() {
+    $("div.vision-details").slideToggle();
 });
 
-$("button.after").on("click", function() {
-    $("div.comments").slideUp();
+$("button.comments").on("click", function() {
+    $("div.comments").slideToggle();
 });
-
 
 $("button.define-goals").on("click", function() {
     $("div.goals").slideToggle();
